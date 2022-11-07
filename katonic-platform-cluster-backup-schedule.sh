@@ -4,6 +4,7 @@ velero_image="velero/velero:v1.7.1"
 
 read -p "Do you want to restore the Katonic platform cluster [y/n] : " restore
 read -p "Select cloud provider where you take the backup(AWS/Azure/GCP) : " cloudprovider
+read -p "Where you deployed k8s cluster(AWS/Azure/GCP/Onprem : " k8sdeploy
 read -p "Enter Bucket name : " bucket
 read -p "Enter velero.yml file path : " velero_file_path
 read -p "Backup schedule time/date:" backup_schedule
@@ -63,6 +64,14 @@ then
     sudo sed -i '/kube-node-lease/d' /root/ns-list.txt 
     sudo sed -i '/kube-public/d' /root/ns-list.txt 
     sudo sed -i '/kube-system/d' /root/ns-list.txt
+
+    if [[ ${k8sdeploy} == "Onprem"  ]]
+    then
+        sudo sed -i '/rook-ceph/d' /root/ns-list.txt
+        echo "Taking backup of Onprem k8s cluster............................."
+    else
+        echo "Taking backup of Cloud provider managed k8s cluster............................."
+    fi
 
     file=/root/ns-list.txt
     for i in `cat $file`
