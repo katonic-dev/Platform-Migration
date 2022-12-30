@@ -22,9 +22,8 @@ spec:
          operator: "Equal"
          value: "platform"
          effect: "NoSchedule"
-       - key: "katonic.ai/node-pool"
-         operator: "Equal"
-         value: "gpu"
+       - key: "nvidia.com/gpu"
+         operator: "Exists"
          effect: "NoSchedule"
       containers:
       - args:
